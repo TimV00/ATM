@@ -49,7 +49,28 @@ public class UserModel
                 role = r["role"] == DBNull.Value ? null : r["role"].ToString(),
         };
         return user;
-    }
+    }    
+ public static User GetBy(string username)
+    {
+        var dt = UserDal.GetBy(username);
+
+        // check if we are trying to get an user that doesn't exist
+        if (dt == null || dt.Rows.Count == 0)
+            return null;
+
+        var r = dt.Rows[0];
+
+
+        var user = new User
+        {
+                user_id = (int)r["user_id"],
+                username = (string)r["username"],
+                password = (int)r["password"],
+                role = r["role"] == DBNull.Value ? null : r["role"].ToString(),
+        };
+        return user;
+    }    
+
     public static int Create(User user)
     {
         var newId = UserDal.Create(

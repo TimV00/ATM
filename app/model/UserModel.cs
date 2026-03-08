@@ -2,7 +2,7 @@
 using System.Data.Common;
 using dal;
 using System.Data;
-public class CustomerModel
+public class UserModel
 {
 
 }

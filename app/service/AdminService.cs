@@ -1,8 +1,9 @@
-﻿namespace model;
+﻿namespace service;
 using System.Data.Common;
 using dal;
+using model;
 using System.Data;
-public class CustomerModel
+public class AdminService
 {
 
 }

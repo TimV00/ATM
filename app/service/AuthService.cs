@@ -12,7 +12,7 @@ public class AuthService
         if (user == null)
             return null;
 
-        if (user.password != password) // simplified
+        if (user.password != password) //passwords don't match
             return null;
 
         return user;

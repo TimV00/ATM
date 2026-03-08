@@ -9,11 +9,26 @@ namespace ATM
     {
         static void Main(string[] args)
         {
-            var users = UserModel.GetAll();
+            Console.WriteLine("=== ATM Login ===");
 
-            foreach (var user in users)
+            Console.Write("Username: ");
+            string username = Console.ReadLine();
+
+            Console.Write("Password: ");
+            string passwordstr = Console.ReadLine();
+            int password = int.Parse(passwordstr);
+            
+            var user = AuthService.Authenticate(username, password);
+
+            if (user != null)
             {
+                Console.WriteLine("Login successful!");
+                Console.WriteLine($"Welcome {user.username}");
                 Console.WriteLine($"{user.user_id} | {user.username} | {user.role}");
+            }
+            else
+            {
+                Console.WriteLine("Login failed.");
             }
         }
     }

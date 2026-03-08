@@ -18,7 +18,20 @@ public class UserDal
         }
         return dt;
     }
-    public static DataTable GetBy(int id)
+    public static DataTable GetBy(string username)
+    {
+        var dt = new DataTable();
+        using (var connection = new MySqlConnection(connectionString))
+        {
+            connection.Open();
+            using (var da = new MySqlDataAdapter(@"select * from users where username='" + username.ToString() + "';", connection))
+            {
+                da.Fill(dt);
+            }
+        }
+        return dt;
+    }
+        public static DataTable GetBy(int id)
     {
         var dt = new DataTable();
         using (var connection = new MySqlConnection(connectionString))

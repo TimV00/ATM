@@ -5,5 +5,5 @@ using model;
 using System.Data;
 public class AdminService
 {
-
+    
 }

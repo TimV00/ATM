@@ -185,17 +185,6 @@ public class AdminService
         Console.ReadKey(true);
     }
 
-    /*
-
-    Enter Account number: 15
-    The account information is:
-    Account # 15
-    Holder: Mr James
-    Balance: 50,000
-    Status: Disabled
-    Login: dotNet66
-    Pin Code: 45678
-    */
     public static void SearchAccount()
     {
         Console.Clear();
@@ -208,7 +197,7 @@ public class AdminService
             Console.Write("Please Enter Customer ID: ");
             string custIdStr = Console.ReadLine();
 
-            if (!int.TryParse(custIdStr, out cust_id) && string.IsNullOrWhiteSpace(custIdStr))
+            if (!int.TryParse(custIdStr, out cust_id) || string.IsNullOrWhiteSpace(custIdStr))
             {
                 Console.WriteLine("Invalid customer ID. Please enter a valid number.");
                 continue;

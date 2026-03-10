@@ -30,11 +30,11 @@ namespace util
                 if (decimal.TryParse(input, out value) && value > 0)
                     return value;
 
-                Console.WriteLine("Invalid amount. Please enter a positive number.");
+                Console.WriteLine("Balance must be a valid amount greater than zero.");
             }
         }
 
-        public static string ReadUsername(string prompt)
+        public static string ReadString(string prompt)
         {
             while (true)
             {

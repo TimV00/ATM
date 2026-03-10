@@ -56,7 +56,7 @@ public class CustomerModel
     public static int Create(Customer customer)
     {
         var newId = CustomerDal.Create(
-            customer.customer_id!,
+            customer.user_id!,
             customer.customer_name!,
             customer.balance!,
             customer.status ?? ""

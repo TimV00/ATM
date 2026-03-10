@@ -4,7 +4,6 @@ using System.Data.Common;
 using dal;
 using model;
 using System.Data;
-using System.Security.Cryptography.X509Certificates;
 using System.Data.SqlTypes;
 
 public class AdminService
@@ -69,6 +68,103 @@ public class AdminService
     {
         Console.Clear();
         Console.WriteLine("Creating new account...");
+
+        // ask for new account username
+        string newusername;
+        while (true)
+        {
+            Console.Write("Enter Account Holder's username: ");
+            newusername = Console.ReadLine();
+
+            if (!string.IsNullOrWhiteSpace(newusername)) //make sure input is not blank
+                break;
+
+            Console.WriteLine("Username cannot be blank.");
+        }
+
+        // ask for new account pin
+        string newpasswordstr;
+        while (true)
+        {
+            Console.Write("Enter Account Holder's Pin code: ");
+            newpasswordstr = Console.ReadLine();
+
+            if (newpasswordstr.Length == 5 && int.TryParse(newpasswordstr, out _)) //Check if pin is a 5 digit integer
+                break;
+
+            Console.WriteLine("Pin Code must be an integer of length 5.");
+        }
+        int newpassword = int.Parse(newpasswordstr);
+
+        // ask for new account holder name
+        string newcustname;
+        while (true)
+        {
+            Console.Write("Enter Account Holder's Name: ");
+            newcustname = Console.ReadLine();
+
+            if (!string.IsNullOrWhiteSpace(newcustname)) //make sure input is not blank
+                break;
+
+            Console.WriteLine("Customer name cannot be blank.");
+        }
+
+        // ask for new account balance
+        string newbalancestr;
+        decimal newbalance;
+        while (true)
+        {
+            Console.Write("Enter Account Holder's Starting Balance: ");
+            newbalancestr = Console.ReadLine();
+
+            if (decimal.TryParse(newbalancestr, out newbalance) && newbalance > 0) // validate balance
+                break;
+
+            Console.WriteLine("Balance must be a valid amount greater than zero.");
+        }
+
+        // ask for new account status
+        string newstatus;
+        while (true)
+        {
+            Console.Write("Enter Account Holder's Status: ");
+            newstatus = Console.ReadLine();
+
+            if (!string.IsNullOrWhiteSpace(newstatus)) //make sure input is not blank
+                break;
+
+            Console.WriteLine("Account status cannot be blank.");
+        }
+
+
+        Console.WriteLine("Added customer: " + newusername + " | "
+            + newpasswordstr + " | "
+            + newcustname + " | "
+            + newbalancestr + " | "
+            + newstatus + " | "
+        );
+
+        //Create a new user table record
+        var newUser = new User
+        {
+            user_id = 0,
+            username = newusername,
+            password = newpassword,
+            role = "Customer"
+        };
+        var newuserID = UserModel.Create(newUser);
+
+        //Create a new customer table record
+        var newCustomer = new Customer
+        {
+            user_id = newuserID,
+            customer_name = newcustname,
+            balance = newbalance,
+            status = newstatus
+        };
+        var newcustID = CustomerModel.Create(newCustomer);
+
+        Console.WriteLine("Account Successfully Created - the account number assigned is: " + newcustID);
         Console.WriteLine("Press any key to return to the menu...");
         Console.ReadKey(true);
     }
@@ -95,5 +191,5 @@ public class AdminService
         Console.WriteLine("Searching for account...");
         Console.WriteLine("Press any key to return to the menu...");
         Console.ReadKey(true);
-    }    
+    }
 }

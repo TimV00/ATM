@@ -9,7 +9,8 @@ namespace ATM
     {
         static void Main(string[] args)
         {
-            var exit = false;
+            Console.Clear();
+            bool exit = false;
             while (!exit)
             {
                 Console.WriteLine("------ ATM Login -----");
@@ -23,34 +24,16 @@ namespace ATM
 
                 var user = AuthService.Authenticate(username, password);
 
-                if (user != null)
+                if (user != null) // login successful
                 {
                     if (user.role.ToUpper() != "ADMIN") // if user is a customer
                     {
-                        Console.Clear();
-                        Console.WriteLine("----- Customer Menu -----");
-                        Console.WriteLine("Login successful!");
-                        Console.WriteLine($"Welcome {user.username}!");
-                        Console.WriteLine($"{user.user_id} | {user.username} | {user.role}");
-                        Console.WriteLine("5------Exit");
-                        ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-                        if (keyInfo.KeyChar == '5') exit=true;
+                        exit = CustomerService.DisplayCustomerMenu(user);
                     }
                     else // admin menu
                     {
-                        Console.Clear();
-                        Console.WriteLine("----- Admin Menu -----");
-                        Console.WriteLine("Login successful!");
-                        Console.WriteLine($"Welcome {user.username}!");
-                        Console.WriteLine($"{user.user_id} | {user.username} | {user.role}");
-                        Console.WriteLine("5------Exit");
-                        ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-                        if (keyInfo.KeyChar == '5') exit=true;
+                        exit = AdminService.DisplayAdminMenu(user);
                     }
-                }
-                else
-                {
-                    Console.WriteLine("Login failed. Please try again");
                 }
             }
         }

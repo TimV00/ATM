@@ -4,7 +4,6 @@ using System.Data.Common;
 using dal;
 using model;
 using System.Data;
-using System.Security.Cryptography.X509Certificates;
 using System.Data.SqlTypes;
 
 public class AdminService
@@ -65,15 +64,6 @@ public class AdminService
         return exit;
     }
 
-
-    /*
-    Login: Javed123
-    Pin Code: 12345
-    Holders Name: XYZ
-    Starting Balance: 6000
-    Status: Active
-    Account Successfully Created – the account number assigned is: 19
-    */
     public static void CreateNewAccount()
     {
         Console.Clear();
@@ -132,7 +122,6 @@ public class AdminService
 
             Console.WriteLine("Balance must be a valid amount greater than zero.");
         }
-        //int newbalance = int.Parse(newbalancestr);
 
         // ask for new account status
         string newstatus;
@@ -164,7 +153,6 @@ public class AdminService
             role = "Customer"
         };
         var newuserID = UserModel.Create(newUser);
-        //var user = UserModel.GetBy(newuserID);
 
         //Create a new customer table record
         var newCustomer = new Customer

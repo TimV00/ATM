@@ -45,8 +45,7 @@ public class UserDal
         return dt;
     }
     public static int Create(
-        int user_id,
-        string user_name,
+        string username,
         int password,
         string role)
     {
@@ -55,14 +54,13 @@ public class UserDal
 
         using var cmd = new MySqlCommand(@"
             INSERT INTO users
-                (user_id, user_name, password, role)
+                (username, password, role)
             VALUES
-                (@user_id, @user_name, @password, @role);
+                (@username, @password, @role);
             SELECT LAST_INSERT_ID();
         ", connection);
 
-        cmd.Parameters.AddWithValue("@user_id", user_id);
-        cmd.Parameters.AddWithValue("@user_name", user_name);
+        cmd.Parameters.AddWithValue("@username", username);
         cmd.Parameters.AddWithValue("@password", password);
         cmd.Parameters.AddWithValue("@role", role);
 

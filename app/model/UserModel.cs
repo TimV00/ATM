@@ -74,7 +74,6 @@ public class UserModel
     public static int Create(User user)
     {
         var newId = UserDal.Create(
-            user.user_id!,
             user.username!,
             user.password!,
             user.role ?? ""

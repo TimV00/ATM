@@ -13,8 +13,14 @@ public class AuthService
             return null;
 
         if (user.password != password) //passwords don't match
+        {
+            Console.Clear();
+            Console.WriteLine("Login failed. Please try again");
             return null;
-
+        }
+            
+        Console.Clear();
+        Console.WriteLine("Login successful!");
         return user;
     }
 }

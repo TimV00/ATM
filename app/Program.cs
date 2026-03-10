@@ -18,8 +18,18 @@ namespace ATM
                 Console.Write("Enter Login: ");
                 string username = Console.ReadLine();
 
-                Console.Write("Enter Pin code: ");
-                string passwordstr = Console.ReadLine();
+                string passwordstr;
+                while (true)
+                {
+                    Console.Write("Enter Pin code: ");
+                    passwordstr = Console.ReadLine();
+
+                    if (passwordstr.Length == 5 && int.TryParse(passwordstr, out _)) //Check if pin is a 5 digit integer
+                        break;
+
+                    Console.WriteLine("Incorrect Password. Please try again");
+                }
+
                 int password = int.Parse(passwordstr);
 
                 var user = AuthService.Authenticate(username, password);

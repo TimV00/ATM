@@ -185,10 +185,55 @@ public class AdminService
         Console.ReadKey(true);
     }
 
+    /*
+
+    Enter Account number: 15
+    The account information is:
+    Account # 15
+    Holder: Mr James
+    Balance: 50,000
+    Status: Disabled
+    Login: dotNet66
+    Pin Code: 45678
+    */
     public static void SearchAccount()
     {
         Console.Clear();
         Console.WriteLine("Searching for account...");
+
+        int cust_id;
+
+        while (true)
+        {
+            Console.Write("Please Enter Customer ID: ");
+            string custIdStr = Console.ReadLine();
+
+            if (!int.TryParse(custIdStr, out cust_id) && string.IsNullOrWhiteSpace(custIdStr))
+            {
+                Console.WriteLine("Invalid customer ID. Please enter a valid number.");
+                continue;
+            }
+
+            var customer = CustomerModel.GetBy(cust_id); // get customer info
+            if (customer == null)
+            {
+                Console.WriteLine("Customer does not exist. Please try again.");
+                continue;
+            }
+
+            var user = UserModel.GetBy(customer.user_id); // get user record associated with customer for login info
+
+
+            // Customer found
+            Console.WriteLine($"Customer found. The account information is:");
+            Console.WriteLine($"Holder: {customer.customer_name}");
+            Console.WriteLine($"Balance: {customer.balance}");
+            Console.WriteLine($"Status: {customer.status}");
+            Console.WriteLine($"Username: {user.username}");
+            Console.WriteLine($"Pin Code: {user.password}");
+            break;
+        }
+
         Console.WriteLine("Press any key to return to the menu...");
         Console.ReadKey(true);
     }

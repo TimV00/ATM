@@ -114,6 +114,28 @@ public class AdminService
     {
         Console.Clear();
         Console.WriteLine("Deleting account...");
+        int cust_id = InputHelper.ReadID("Please Enter Customer ID: ");
+
+        var customer = CustomerModel.GetBy(cust_id); // get customer info
+        if (customer == null)
+        {
+            Console.WriteLine("Customer does not exist. Please try again.");
+            return;
+        }
+
+        var user = UserModel.GetBy(customer.user_id);
+
+        if (!InputHelper.ConfirmId($"\nYou wish to delete the account held by {customer.customer_name} . If this information is correct, please re-enter the account number: ", cust_id))
+        {
+            Console.WriteLine("Customer ID did not match. Account deletion cancelled.");
+            Console.ReadKey(true);
+            return;
+        }
+
+        CustomerModel.DeleteCustomer(cust_id);
+        UserModel.DeleteUser(user.user_id);
+
+        Console.WriteLine("Customer account deleted successfully.");
         Console.WriteLine("Press any key to return to the menu...");
         Console.ReadKey(true);
     }

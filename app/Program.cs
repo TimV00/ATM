@@ -27,7 +27,7 @@ namespace ATM
                     if (passwordstr.Length == 5 && int.TryParse(passwordstr, out _)) //Check if pin is a 5 digit integer
                         break;
 
-                    Console.WriteLine("Incorrect Password. Please try again");
+                    Console.WriteLine("Pin must be 5 digits. Please try again");
                 }
 
                 int password = int.Parse(passwordstr);
@@ -36,7 +36,7 @@ namespace ATM
 
                 if (user != null) // login successful
                 {
-                    if (user.role.ToUpper() != "ADMIN") // if user is a customer
+                    if (user.role.ToUpper() != "ADMIN") // customer menu
                     {
                         exit = CustomerService.DisplayCustomerMenu(user);
                     }

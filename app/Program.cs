@@ -2,6 +2,7 @@
 using System.Data;
 using service;
 using model;
+using util;
 
 namespace ATM
 {
@@ -15,22 +16,8 @@ namespace ATM
             {
                 Console.WriteLine("------ ATM Login -----");
 
-                Console.Write("Enter Login: ");
-                string username = Console.ReadLine();
-
-                string passwordstr;
-                while (true)
-                {
-                    Console.Write("Enter Pin code: ");
-                    passwordstr = Console.ReadLine();
-
-                    if (passwordstr.Length == 5 && int.TryParse(passwordstr, out _)) //Check if pin is a 5 digit integer
-                        break;
-
-                    Console.WriteLine("Pin must be 5 digits. Please try again");
-                }
-
-                int password = int.Parse(passwordstr);
+                string username = InputHelper.ReadString("Enter Login: ");
+                int password = InputHelper.ReadPin("Enter Pin code: ");
 
                 var user = AuthService.Authenticate(username, password);
 

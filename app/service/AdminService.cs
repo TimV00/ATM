@@ -3,6 +3,7 @@
 using System.Data.Common;
 using dal;
 using model;
+using util;
 using System.Data;
 using System.Data.SqlTypes;
 
@@ -70,79 +71,19 @@ public class AdminService
         Console.WriteLine("Creating new account...");
 
         // ask for new account username
-        string newusername;
-        while (true)
-        {
-            Console.Write("Enter Account Holder's username: ");
-            newusername = Console.ReadLine();
-
-            if (!string.IsNullOrWhiteSpace(newusername)) //make sure input is not blank
-                break;
-
-            Console.WriteLine("Username cannot be blank.");
-        }
+        string newusername = InputHelper.ReadString("Enter Account Holder's username: ");
 
         // ask for new account pin
-        string newpasswordstr;
-        while (true)
-        {
-            Console.Write("Enter Account Holder's Pin code: ");
-            newpasswordstr = Console.ReadLine();
-
-            if (newpasswordstr.Length == 5 && int.TryParse(newpasswordstr, out _)) //Check if pin is a 5 digit integer
-                break;
-
-            Console.WriteLine("Pin Code must be an integer of length 5.");
-        }
-        int newpassword = int.Parse(newpasswordstr);
+        int newpassword = InputHelper.ReadPin("Enter Account Holder's Pin code: ");
 
         // ask for new account holder name
-        string newcustname;
-        while (true)
-        {
-            Console.Write("Enter Account Holder's Name: ");
-            newcustname = Console.ReadLine();
-
-            if (!string.IsNullOrWhiteSpace(newcustname)) //make sure input is not blank
-                break;
-
-            Console.WriteLine("Customer name cannot be blank.");
-        }
+        string newcustname = InputHelper.ReadString("Enter Account Holder's Name: ");
 
         // ask for new account balance
-        string newbalancestr;
-        decimal newbalance;
-        while (true)
-        {
-            Console.Write("Enter Account Holder's Starting Balance: ");
-            newbalancestr = Console.ReadLine();
-
-            if (decimal.TryParse(newbalancestr, out newbalance) && newbalance > 0) // validate balance
-                break;
-
-            Console.WriteLine("Balance must be a valid amount greater than zero.");
-        }
+        decimal newbalance = InputHelper.ReadBalance("Enter Account Holder's Starting Balance: ");
 
         // ask for new account status
-        string newstatus;
-        while (true)
-        {
-            Console.Write("Enter Account Holder's Status: ");
-            newstatus = Console.ReadLine();
-
-            if (!string.IsNullOrWhiteSpace(newstatus)) //make sure input is not blank
-                break;
-
-            Console.WriteLine("Account status cannot be blank.");
-        }
-
-
-        Console.WriteLine("Added customer: " + newusername + " | "
-            + newpasswordstr + " | "
-            + newcustname + " | "
-            + newbalancestr + " | "
-            + newstatus + " | "
-        );
+        string newstatus = InputHelper.ReadString("Enter Account Holder's Status: ");
 
         //Create a new user table record
         var newUser = new User
@@ -185,34 +126,14 @@ public class AdminService
         Console.ReadKey(true);
     }
 
-    /*
-
-    Enter Account number: 15
-    The account information is:
-    Account # 15
-    Holder: Mr James
-    Balance: 50,000
-    Status: Disabled
-    Login: dotNet66
-    Pin Code: 45678
-    */
     public static void SearchAccount()
     {
         Console.Clear();
         Console.WriteLine("Searching for account...");
 
-        int cust_id;
-
         while (true)
         {
-            Console.Write("Please Enter Customer ID: ");
-            string custIdStr = Console.ReadLine();
-
-            if (!int.TryParse(custIdStr, out cust_id) && string.IsNullOrWhiteSpace(custIdStr))
-            {
-                Console.WriteLine("Invalid customer ID. Please enter a valid number.");
-                continue;
-            }
+            int cust_id = InputHelper.ReadID("Please Enter Customer ID: ");
 
             var customer = CustomerModel.GetBy(cust_id); // get customer info
             if (customer == null)

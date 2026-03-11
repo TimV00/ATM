@@ -73,6 +73,7 @@ public class CustomerDal
     public static int Update(
         int customer_id,
         string customer_name,
+        decimal balance,
         string status)
     {
         using var connection = new MySqlConnection(connectionString);
@@ -81,12 +82,14 @@ public class CustomerDal
         using var cmd = new MySqlCommand(@"
             UPDATE customers
             SET customer_name = @customer_name,
+                balance = @balance,
                 status = @status
             WHERE customer_id = @customer_id;
         ", connection);
 
         cmd.Parameters.AddWithValue("@customer_id", customer_id);
         cmd.Parameters.AddWithValue("@customer_name", customer_name);
+        cmd.Parameters.AddWithValue("@balance", balance);
         cmd.Parameters.AddWithValue("@status", status);
 
         return cmd.ExecuteNonQuery();

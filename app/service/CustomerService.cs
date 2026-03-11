@@ -65,8 +65,22 @@ public class CustomerService
     {
         Console.Clear();
         Console.WriteLine("Withdrawing Cash...");
-        Console.WriteLine("Press any key to return to the menu...");
-        Console.ReadKey(true);
+        decimal withdrawal;
+
+        while (true)
+        {
+            withdrawal = InputHelper.ReadDeposit("Enter the cash amount to withdraw: ");
+
+            if (withdrawal <= customer.balance)
+                break;
+
+            Console.WriteLine("Withdrawal amount cannot be greater than current balance.");
+        }
+
+        customer.balance -= withdrawal;
+        CustomerModel.Update(customer);
+        Console.WriteLine("Cash withdrawn successfully.");
+        DisplayBalance(customer);
     }
 
     public static void DepositCash(Customer customer)
@@ -75,8 +89,9 @@ public class CustomerService
         Console.WriteLine("Depositing cash...");
         // ask for new account balance
         decimal deposit = InputHelper.ReadDeposit("Enter the cash amount to deposit: ");
-        customer.balance+=deposit;
-        CustomerModel.Update(customer); 
+        customer.balance += deposit;
+        CustomerModel.Update(customer);
+        Console.WriteLine("Cash deposited successfully.");
         DisplayBalance(customer);
     }
 

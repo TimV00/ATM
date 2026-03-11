@@ -73,8 +73,11 @@ public class CustomerService
     {
         Console.Clear();
         Console.WriteLine("Depositing cash...");
-        Console.WriteLine("Press any key to return to the menu...");
-        Console.ReadKey(true);
+        // ask for new account balance
+        decimal deposit = InputHelper.ReadDeposit("Enter the cash amount to deposit: ");
+        customer.balance+=deposit;
+        CustomerModel.Update(customer); 
+        DisplayBalance(customer);
     }
 
     public static void DisplayBalance(Customer customer)

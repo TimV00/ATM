@@ -34,6 +34,22 @@ namespace util
             }
         }
 
+        public static decimal ReadDeposit(string prompt)
+        {
+            decimal value;
+
+            while (true)
+            {
+                Console.Write(prompt);
+                string input = Console.ReadLine();
+
+                if (decimal.TryParse(input, out value) && value > 0)
+                    return value;
+
+                Console.WriteLine("Deposit must be a valid amount greater than zero.");
+            }
+        }        
+
         public static string ReadString(string prompt)
         {
             while (true)

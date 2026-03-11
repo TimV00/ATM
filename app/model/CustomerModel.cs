@@ -53,6 +53,27 @@ public class CustomerModel
         };
         return customer;
     }
+        public static Customer GetByUserID(int id)
+    {
+        var dt = CustomerDal.GetByUserID(id);
+
+        // check if we are trying to get an customer that doesn't exist
+        if (dt == null || dt.Rows.Count == 0)
+            return null;
+
+        var r = dt.Rows[0];
+
+
+        var customer = new Customer
+        {
+                customer_id = (int)r["customer_id"],
+                customer_name = (string)r["customer_name"],
+                user_id = (int)r["user_id"],
+                balance = (decimal)r["balance"],
+                status = (string)r["status"],
+        };
+        return customer;
+    }
     public static int Create(Customer customer)
     {
         var newId = CustomerDal.Create(

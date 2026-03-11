@@ -12,6 +12,7 @@ public class CustomerService
 {
     public static bool DisplayCustomerMenu(User user)
     {
+        var customer = CustomerModel.GetByUserID(user.user_id);
         bool exit = false;
 
         while (!exit)
@@ -24,7 +25,7 @@ public class CustomerService
             */
             Console.Clear();
             Console.WriteLine("----- Customer Menu -----");
-            Console.WriteLine($"Welcome {user.username}!");
+            Console.WriteLine($"Welcome {customer.customer_name}!");
             Console.WriteLine("1 ------ Withdraw Cash");
             Console.WriteLine("2 ------ Deposit Cash");
             Console.WriteLine("3 ------ Display Balance");
@@ -35,15 +36,15 @@ public class CustomerService
             switch (keyInfo.Key)
             {
                 case ConsoleKey.D1: // 1----Withdraw Cash
-                    WithdrawCash();
+                    WithdrawCash(customer);
                     break;
 
                 case ConsoleKey.D2: // 2----Deposit Cash
-                    DepositCash();
+                    DepositCash(customer);
                     break;
 
                 case ConsoleKey.D3: // 3----Display Balance
-                    DisplayBalance();
+                    DisplayBalance(customer);
                     break;
 
                 case ConsoleKey.D4: // 4----Exit
@@ -60,7 +61,7 @@ public class CustomerService
         return exit;
     }
 
-    public static void WithdrawCash()
+    public static void WithdrawCash(Customer customer)
     {
         Console.Clear();
         Console.WriteLine("Withdrawing Cash...");
@@ -68,7 +69,7 @@ public class CustomerService
         Console.ReadKey(true);
     }
 
-    public static void DepositCash()
+    public static void DepositCash(Customer customer)
     {
         Console.Clear();
         Console.WriteLine("Depositing cash...");
@@ -76,10 +77,13 @@ public class CustomerService
         Console.ReadKey(true);
     }
 
-    public static void DisplayBalance()
+    public static void DisplayBalance(Customer customer)
     {
         Console.Clear();
-        Console.WriteLine("Displaying Balance...");
+        Console.WriteLine($"Account #{customer.customer_id}");
+        Console.WriteLine($"Date: {DateTime.Today}");
+        Console.WriteLine($"Balance: {customer.balance}");
+
         Console.WriteLine("Press any key to return to the menu...");
         Console.ReadKey(true);
     }

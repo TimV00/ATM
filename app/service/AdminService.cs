@@ -144,6 +144,85 @@ public class AdminService
     {
         Console.Clear();
         Console.WriteLine("Updating account...");
+
+        bool updated = false;
+
+        int cust_id = InputHelper.ReadID("Enter Customer ID to update: ");
+        var customer = CustomerModel.GetBy(cust_id);
+
+        if (customer == null)
+        {
+            Console.WriteLine("Customer does not exist. Please try again.");
+            Console.ReadKey(true);
+            return;
+        }
+
+        var user = UserModel.GetBy(customer.user_id);
+
+        Console.WriteLine("\nPress ENTER to keep the current value.\n");
+
+        // update customer name
+        Console.WriteLine($"Current Holder: {customer.customer_name}");
+        Console.Write("New Holder: ");
+        string newcust_name = Console.ReadLine();
+
+        if (!string.IsNullOrWhiteSpace(newcust_name))
+        {
+            customer.customer_name = newcust_name;
+            updated = true;
+        }
+
+        // update customer status
+        Console.WriteLine($"Current Status: {customer.status}");
+        Console.Write("New Status: ");
+        string newstatus = Console.ReadLine();
+
+        if (!string.IsNullOrWhiteSpace(newstatus))
+        {
+            customer.status = newstatus;
+            updated = true;
+        }
+
+        // update username
+        Console.WriteLine($"Current Username: {user.username}");
+        Console.Write("New Username: ");
+        string newusername = Console.ReadLine();
+
+        if (!string.IsNullOrWhiteSpace(newusername))
+        {
+            user.username = newusername;
+            updated = true;
+        }
+
+        // update PIN
+        Console.WriteLine($"\nCurrent PIN: {user.password}");
+        Console.Write("New PIN: ");
+        string newpasswordstr = Console.ReadLine();
+
+        if (!string.IsNullOrWhiteSpace(newpasswordstr))
+        {
+            if (newpasswordstr.Length == 5 && int.TryParse(newpasswordstr, out int newpassword))
+            {
+                user.password = newpassword;
+                updated = true;
+            }
+            else
+            {
+                Console.WriteLine("Invalid PIN. Keeping previous value.");
+            }
+        }
+
+        if (updated)
+        {
+            UserModel.Update(user); // update username or pin
+            CustomerModel.Update(customer); // update customer_name or status
+            Console.WriteLine("\nAccount updated successfully.");
+        }
+        else
+        {
+            Console.WriteLine("\nNo changes made.");
+        }
+
         Console.WriteLine("Press any key to return to the menu...");
         Console.ReadKey(true);
     }

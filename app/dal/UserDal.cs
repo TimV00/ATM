@@ -68,7 +68,7 @@ public class UserDal
     }
     public static int Update(
         int user_id,
-        string user_name,
+        string username,
         int password)
     {
         using var connection = new MySqlConnection(connectionString);
@@ -76,13 +76,13 @@ public class UserDal
 
         using var cmd = new MySqlCommand(@"
             UPDATE users
-            SET user_name = @user_name,
+            SET username = @username,
                 password = @password
             WHERE user_id = @user_id;
         ", connection);
 
         cmd.Parameters.AddWithValue("@user_id", user_id);
-        cmd.Parameters.AddWithValue("@user_name", user_name);
+        cmd.Parameters.AddWithValue("@username", username);
         cmd.Parameters.AddWithValue("@password", password);
 
         return cmd.ExecuteNonQuery();

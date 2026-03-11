@@ -16,14 +16,14 @@ namespace ATM
             {
                 Console.WriteLine("------ ATM Login -----");
 
-                string username = InputHelper.ReadString("Enter Login: ");
+                string username = InputHelper.ReadString("Enter Username: ");
                 int password = InputHelper.ReadPin("Enter Pin code: ");
 
                 var user = AuthService.Authenticate(username, password);
 
                 if (user != null) // login successful
                 {
-                    if (user.role.ToUpper() != "ADMIN") // customer menu
+                    if (!user.role.Equals("ADMIN", StringComparison.OrdinalIgnoreCase)) // user is not an admin, so display customer menu
                     {
                         exit = CustomerService.DisplayCustomerMenu(user);
                     }

@@ -46,9 +46,25 @@ namespace util
                 if (decimal.TryParse(input, out value) && value > 0)
                     return value;
 
-                Console.WriteLine("Deposit must be a valid amount greater than zero.");
+                Console.WriteLine("Deposit amount must be a valid amount greater than zero.");
             }
-        }        
+        }
+
+        public static decimal ReadWithdrawal(string prompt)
+        {
+            decimal value;
+
+            while (true)
+            {
+                Console.Write(prompt);
+                string input = Console.ReadLine();
+
+                if (decimal.TryParse(input, out value) && value > 0)
+                    return value;
+
+                Console.WriteLine("Withdrawal amount must be a valid amount greater than zero.");
+            }
+        }
 
         public static string ReadString(string prompt)
         {

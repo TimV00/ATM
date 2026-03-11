@@ -90,6 +90,7 @@ public class CustomerModel
         var rows = CustomerDal.Update(
             customer.customer_id!,
             customer.customer_name!,
+            customer.balance!,
             customer.status ?? ""
         );
 

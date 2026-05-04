@@ -1,4 +1,5 @@
 ﻿namespace dal;
+
 using System.Data;
 using MySql.Data.MySqlClient;
 public class CustomerDal
@@ -21,31 +22,26 @@ public class CustomerDal
     public static DataTable GetBy(int id)
     {
         var dt = new DataTable();
-        using (var connection = new MySqlConnection(connectionString))
-        {
-            connection.Open();
-            using (var da = new MySqlDataAdapter(@"select * from customers where customer_id=" + id.ToString() + ";", connection))
-            {
-                da.Fill(dt);
-            }
-        }
+        using var connection = new MySqlConnection(connectionString);
+        connection.Open();
+        using var cmd = new MySqlCommand("SELECT * FROM customers WHERE customer_id = @id;", connection);
+        cmd.Parameters.AddWithValue("@id", id);
+        using var da = new MySqlDataAdapter(cmd);
+        da.Fill(dt);
         return dt;
     }
 
     public static DataTable GetByUserID(int id)
     {
         var dt = new DataTable();
-        using (var connection = new MySqlConnection(connectionString))
-        {
-            connection.Open();
-            using (var da = new MySqlDataAdapter(@"select * from customers where user_id=" + id.ToString() + ";", connection))
-            {
-                da.Fill(dt);
-            }
-        }
+        using var connection = new MySqlConnection(connectionString);
+        connection.Open();
+        using var cmd = new MySqlCommand("SELECT * FROM customers WHERE user_id = @id;", connection);
+        cmd.Parameters.AddWithValue("@id", id);
+        using var da = new MySqlDataAdapter(cmd);
+        da.Fill(dt);
         return dt;
     }
-
     public static int Create(
         int user_id,
         string customer_name,

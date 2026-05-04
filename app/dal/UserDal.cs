@@ -1,4 +1,5 @@
 ﻿namespace dal;
+
 using System.Data;
 using MySql.Data.MySqlClient;
 public class UserDal
@@ -21,29 +22,27 @@ public class UserDal
     public static DataTable GetBy(string username)
     {
         var dt = new DataTable();
-        using (var connection = new MySqlConnection(connectionString))
-        {
-            connection.Open();
-            using (var da = new MySqlDataAdapter(@"select * from users where username='" + username.ToString() + "';", connection))
-            {
-                da.Fill(dt);
-            }
-        }
+        using var connection = new MySqlConnection(connectionString);
+        connection.Open();
+        using var cmd = new MySqlCommand("SELECT * FROM users WHERE username = @username;", connection);
+        cmd.Parameters.AddWithValue("@username", username);
+        using var da = new MySqlDataAdapter(cmd);
+        da.Fill(dt);
         return dt;
     }
-        public static DataTable GetBy(int id)
+    
+    public static DataTable GetBy(int id)
     {
         var dt = new DataTable();
-        using (var connection = new MySqlConnection(connectionString))
-        {
-            connection.Open();
-            using (var da = new MySqlDataAdapter(@"select * from users where user_id=" + id.ToString() + ";", connection))
-            {
-                da.Fill(dt);
-            }
-        }
+        using var connection = new MySqlConnection(connectionString);
+        connection.Open();
+        using var cmd = new MySqlCommand("SELECT * FROM users WHERE user_id = @id;", connection);
+        cmd.Parameters.AddWithValue("@id", id);
+        using var da = new MySqlDataAdapter(cmd);
+        da.Fill(dt);
         return dt;
     }
+
     public static int Create(
         string username,
         int password,

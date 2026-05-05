@@ -1,6 +1,7 @@
 ﻿using dal;
 using model;
 using service;
+using Microsoft.Extensions.Configuration;
 
 namespace ATM
 {
@@ -10,7 +11,13 @@ namespace ATM
         {
             try
             {
-                const string connectionString = "server=host.docker.internal;port=3333;uid=root;pwd=pass;database=ATM";
+                var config = new ConfigurationBuilder()
+                    .SetBasePath(AppContext.BaseDirectory)
+                    .AddJsonFile("appsettings.json", optional: false)
+                    .Build();
+
+                string connectionString = config.GetConnectionString("ATM")
+                    ?? throw new InvalidOperationException("Connection string 'ATM' not found in appsettings.json.");
 
                 // DAL layer
                 var userDal = new UserDal(connectionString);

@@ -1,18 +1,23 @@
 ﻿namespace service;
-
-using System.Data.Common;
-using dal;
 using model;
 using util;
-using System.Data;
-using System.Security.Cryptography.X509Certificates;
-using System.Data.SqlTypes;
 
-public class CustomerService
+public interface ICustomerService
 {
-    public static bool DisplayCustomerMenu(User user)
+    bool DisplayCustomerMenu(User user);
+}
+
+public class CustomerService : ICustomerService
+{
+    private readonly CustomerModel _customerModel;
+
+    public CustomerService(CustomerModel customerModel)
     {
-        var customer = CustomerModel.GetByUserID(user.user_id);
+        _customerModel = customerModel;
+    }
+    public bool DisplayCustomerMenu(User user)
+    {
+        var customer = _customerModel.GetByUserID(user.user_id);
         bool exit = false;
 
         while (!exit)
@@ -61,7 +66,7 @@ public class CustomerService
         return exit;
     }
 
-    public static void WithdrawCash(Customer customer)
+    public void WithdrawCash(Customer customer)
     {
         Console.Clear();
         Console.WriteLine("Withdrawing Cash...");
@@ -78,24 +83,24 @@ public class CustomerService
         }
 
         customer.balance -= withdrawal;
-        CustomerModel.Update(customer);
+        _customerModel.Update(customer);
         Console.WriteLine("Cash withdrawn successfully.");
         DisplayBalance(customer);
     }
 
-    public static void DepositCash(Customer customer)
+    public void DepositCash(Customer customer)
     {
         Console.Clear();
         Console.WriteLine("Depositing cash...");
         // ask for new account balance
         decimal deposit = InputHelper.ReadDeposit("Enter the cash amount to deposit: ");
         customer.balance += deposit;
-        CustomerModel.Update(customer);
+        _customerModel.Update(customer);
         Console.WriteLine("Cash deposited successfully.");
         DisplayBalance(customer);
     }
 
-    public static void DisplayBalance(Customer customer)
+    public void DisplayBalance(Customer customer)
     {
         Console.Clear();
         Console.WriteLine($"Account #{customer.customer_id}");

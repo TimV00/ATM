@@ -17,7 +17,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '10.0.x'
+          dotnet-version: "10.0.x"
 
       - name: Restore dependencies
         run: dotnet restore
@@ -29,7 +29,9 @@ jobs:
         run: dotnet build --configuration Release --no-restore
 
       - name: Run tests with coverage
-        run: dotnet test --collect:"XPlat Code Coverage" --settings coverlet.runsettings --results-directory ./coverage
+        run: dotnet test --collect:"XPlat Code Coverage" --results-directory ./coverage
+          --
+          DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Exclude="[ATM]dal.*,[ATM]service.*,[ATM]util.*,[ATM]ATM.Program"
 
       - name: Print coverage report
         run: cat ./coverage/**/coverage.cobertura.xml

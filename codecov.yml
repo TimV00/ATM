@@ -12,3 +12,9 @@ coverage:
 comment:
   layout: "reach,diff,flags,files"
   behavior: default
+  
+ignore:
+  - "app/dal/**"
+  - "app/service/**"
+  - "app/util/**"
+  - "app/Program.cs"

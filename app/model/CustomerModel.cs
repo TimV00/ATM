@@ -6,10 +6,10 @@ using System.Data;
 public class Customer
 {
     public int customer_id { get; private set; }
-    public string customer_name { get; private set; }
+    public string? customer_name { get; private set; }
     public int user_id { get; private set; }
     public decimal balance { get; private set; }
-    public string status { get; private set; }
+    public string? status { get; private set; }
 
     private static readonly HashSet<string> ValidStatuses = new(StringComparer.OrdinalIgnoreCase)
     {

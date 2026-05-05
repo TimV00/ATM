@@ -1,7 +1,7 @@
 ﻿namespace model;
-using System.Data.Common;
 using dal;
 using System.Data;
+
 public class Customer
 {
     public int customer_id { get; set; }
@@ -10,94 +10,60 @@ public class Customer
     public decimal balance { get; set; }
     public string status { get; set; }
 }
+
 public class CustomerModel
 {
-    // Get all customers
-    public static List<Customer> GetAll()
+    private readonly ICustomerDal _dal;
+
+    public CustomerModel(ICustomerDal dal)
+    {
+        _dal = dal;
+    }
+
+    public List<Customer> GetAll()
     {
         var customers = new List<Customer>();
-        var dt = CustomerDal.GetAll();
+        var dt = _dal.GetAll();
         foreach (DataRow r in dt.Rows)
-        {
-            customers.Add(new Customer
-            {
-                customer_id = (int)r["customer_id"],
-                customer_name = (string)r["customer_name"],
-                user_id = (int)r["user_id"],
-                balance = (decimal)r["balance"],
-                status = (string)r["status"],
-            });
-        }
-
+            customers.Add(MapRow(r));
         return customers;
     }
 
-    public static Customer GetBy(int id)
+    public Customer? GetBy(int id)
     {
-        var dt = CustomerDal.GetBy(id);
-
-        // check if we are trying to get an customer that doesn't exist
-        if (dt == null || dt.Rows.Count == 0)
-            return null;
-
-        var r = dt.Rows[0];
-
-
-        var customer = new Customer
-        {
-                customer_id = (int)r["customer_id"],
-                customer_name = (string)r["customer_name"],
-                user_id = (int)r["user_id"],
-                balance = (decimal)r["balance"],
-                status = (string)r["status"],
-        };
-        return customer;
+        var dt = _dal.GetBy(id);
+        if (dt == null || dt.Rows.Count == 0) return null;
+        return MapRow(dt.Rows[0]);
     }
-        public static Customer GetByUserID(int id)
+
+    public Customer? GetByUserID(int id)
     {
-        var dt = CustomerDal.GetByUserID(id);
-
-        // check if we are trying to get an customer that doesn't exist
-        if (dt == null || dt.Rows.Count == 0)
-            return null;
-
-        var r = dt.Rows[0];
-
-
-        var customer = new Customer
-        {
-                customer_id = (int)r["customer_id"],
-                customer_name = (string)r["customer_name"],
-                user_id = (int)r["user_id"],
-                balance = (decimal)r["balance"],
-                status = (string)r["status"],
-        };
-        return customer;
+        var dt = _dal.GetByUserID(id);
+        if (dt == null || dt.Rows.Count == 0) return null;
+        return MapRow(dt.Rows[0]);
     }
-    public static int Create(Customer customer)
+
+    public int Create(Customer customer)
     {
-        var newId = CustomerDal.Create(
-            customer.user_id!,
-            customer.customer_name!,
-            customer.balance!,
-            customer.status ?? ""
-        );
+        return _dal.Create(customer.user_id, customer.customer_name!, customer.balance, customer.status ?? "");
+    }
 
-        return newId;
-    }
-    public static int Update(Customer customer)
+    public int Update(Customer customer)
     {
-        var rows = CustomerDal.Update(
-            customer.customer_id!,
-            customer.customer_name!,
-            customer.balance!,
-            customer.status ?? ""
-        );
+        return _dal.Update(customer.customer_id, customer.customer_name!, customer.balance, customer.status ?? "");
+    }
 
-        return rows;
-    }
-    public static int DeleteCustomer(int id)
+    public int DeleteCustomer(int id)
     {
-        return CustomerDal.DeleteCustomer(id);
+        return _dal.DeleteCustomer(id);
     }
+
+    private static Customer MapRow(DataRow r) => new Customer
+    {
+        customer_id = (int)r["customer_id"],
+        customer_name = (string)r["customer_name"],
+        user_id = (int)r["user_id"],
+        balance = (decimal)r["balance"],
+        status = (string)r["status"],
+    };
 }

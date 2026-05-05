@@ -1,7 +1,7 @@
 ﻿namespace model;
-using System.Data.Common;
 using dal;
 using System.Data;
+
 public class User
 {
     public int user_id { get; set; }
@@ -9,90 +9,59 @@ public class User
     public int password { get; set; }
     public string role { get; set; }
 }
+
 public class UserModel
 {
-    // Get all users
-    public static List<User> GetAll()
+    private readonly IUserDal _dal;
+
+    public UserModel(IUserDal dal)
+    {
+        _dal = dal;
+    }
+
+    public List<User> GetAll()
     {
         var users = new List<User>();
-        var dt = UserDal.GetAll();
+        var dt = _dal.GetAll();
         foreach (DataRow r in dt.Rows)
-        {
-            users.Add(new User
-            {
-                user_id = (int)r["user_id"],
-                username = (string)r["username"],
-                password = (int)r["password"],
-                role = r["role"] == DBNull.Value ? null : r["role"].ToString(),
-            });
-        }
-
+            users.Add(MapRow(r));
         return users;
     }
 
-    public static User GetBy(int id)
+    public User? GetBy(int id)
     {
-        var dt = UserDal.GetBy(id);
-
-        // check if we are trying to get an user that doesn't exist
-        if (dt == null || dt.Rows.Count == 0)
-            return null;
-
-        var r = dt.Rows[0];
-
-
-        var user = new User
-        {
-                user_id = (int)r["user_id"],
-                username = (string)r["username"],
-                password = (int)r["password"],
-                role = r["role"] == DBNull.Value ? null : r["role"].ToString(),
-        };
-        return user;
-    }    
- public static User GetBy(string username)
-    {
-        var dt = UserDal.GetBy(username);
-
-        // check if we are trying to get an user that doesn't exist
-        if (dt == null || dt.Rows.Count == 0)
-            return null;
-
-        var r = dt.Rows[0];
-
-
-        var user = new User
-        {
-                user_id = (int)r["user_id"],
-                username = (string)r["username"],
-                password = (int)r["password"],
-                role = r["role"] == DBNull.Value ? null : r["role"].ToString(),
-        };
-        return user;
-    }    
-
-    public static int Create(User user)
-    {
-        var newId = UserDal.Create(
-            user.username!,
-            user.password!,
-            user.role ?? ""
-        );
-
-        return newId;
+        var dt = _dal.GetBy(id);
+        if (dt == null || dt.Rows.Count == 0) return null;
+        return MapRow(dt.Rows[0]);
     }
-    public static int Update(User user)
-    {
-        var rows = UserDal.Update(
-            user.user_id!,
-            user.username!,
-            user.password!
-        );
 
-        return rows;
-    }
-    public static int DeleteUser(int id)
+    public User? GetBy(string username)
     {
-        return UserDal.DeleteUser(id);
+        var dt = _dal.GetBy(username);
+        if (dt == null || dt.Rows.Count == 0) return null;
+        return MapRow(dt.Rows[0]);
     }
+
+    public int Create(User user)
+    {
+        return _dal.Create(user.username!, user.password, user.role ?? "");
+    }
+
+    public int Update(User user)
+    {
+        return _dal.Update(user.user_id, user.username!, user.password);
+    }
+
+    public int DeleteUser(int id)
+    {
+        return _dal.DeleteUser(id);
+    }
+
+    private static User MapRow(DataRow r) => new User
+    {
+        user_id = (int)r["user_id"],
+        username = (string)r["username"],
+        password = (int)r["password"],
+        role = r["role"] == DBNull.Value ? null : r["role"].ToString(),
+    };
 }

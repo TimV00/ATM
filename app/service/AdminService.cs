@@ -1,15 +1,23 @@
 ﻿namespace service;
-
-using System.Data.Common;
-using dal;
 using model;
 using util;
-using System.Data;
-using System.Data.SqlTypes;
 
-public class AdminService
+public interface IAdminService
 {
-    public static bool DisplayAdminMenu(User user)
+    bool DisplayAdminMenu(User user);
+}
+
+public class AdminService : IAdminService
+{
+    private readonly UserModel _userModel;
+    private readonly CustomerModel _customerModel;
+
+    public AdminService(UserModel userModel, CustomerModel customerModel)
+    {
+        _userModel = userModel;
+        _customerModel = customerModel;
+    }
+    public bool DisplayAdminMenu(User user)
     {
         bool exit = false;
 
@@ -65,7 +73,7 @@ public class AdminService
         return exit;
     }
 
-    public static void CreateNewAccount()
+    public void CreateNewAccount()
     {
         Console.Clear();
         Console.WriteLine("Creating new account...");
@@ -93,7 +101,7 @@ public class AdminService
             password = newpassword,
             role = "Customer"
         };
-        var newuserID = UserModel.Create(newUser);
+        var newuserID = _userModel.Create(newUser);
 
         //Create a new customer table record
         var newCustomer = new Customer
@@ -103,27 +111,27 @@ public class AdminService
             balance = newbalance,
             status = newstatus
         };
-        var newcustID = CustomerModel.Create(newCustomer);
+        var newcustID = _customerModel.Create(newCustomer);
 
         Console.WriteLine("Account Successfully Created - the account number assigned is: " + newcustID);
         Console.WriteLine("Press any key to return to the menu...");
         Console.ReadKey(true);
     }
 
-    public static void DeleteAccount()
+    public void DeleteAccount()
     {
         Console.Clear();
         Console.WriteLine("Deleting account...");
         int cust_id = InputHelper.ReadID("Please Enter Customer ID: ");
 
-        var customer = CustomerModel.GetBy(cust_id); // get customer info
+        var customer = _customerModel.GetBy(cust_id); // get customer info
         if (customer == null)
         {
             Console.WriteLine("Customer does not exist. Please try again.");
             return;
         }
 
-        var user = UserModel.GetBy(customer.user_id);
+        var user = _userModel.GetBy(customer.user_id);
 
         if (!InputHelper.ConfirmId($"\nYou wish to delete the account held by {customer.customer_name} . If this information is correct, please re-enter the account number: ", cust_id))
         {
@@ -132,15 +140,15 @@ public class AdminService
             return;
         }
 
-        CustomerModel.DeleteCustomer(cust_id);
-        UserModel.DeleteUser(user.user_id);
+        _customerModel.DeleteCustomer(cust_id);
+        _userModel.DeleteUser(user.user_id);
 
         Console.WriteLine("Customer account deleted successfully.");
         Console.WriteLine("Press any key to return to the menu...");
         Console.ReadKey(true);
     }
 
-    public static void UpdateAccount()
+    public void UpdateAccount()
     {
         Console.Clear();
         Console.WriteLine("Updating account...");
@@ -148,7 +156,7 @@ public class AdminService
         bool updated = false;
 
         int cust_id = InputHelper.ReadID("Enter Customer ID to update: ");
-        var customer = CustomerModel.GetBy(cust_id);
+        var customer = _customerModel.GetBy(cust_id);
 
         if (customer == null)
         {
@@ -157,7 +165,7 @@ public class AdminService
             return;
         }
 
-        var user = UserModel.GetBy(customer.user_id);
+        var user = _userModel.GetBy(customer.user_id);
 
         Console.WriteLine("\nPress ENTER to keep the current value.\n");
 
@@ -214,8 +222,8 @@ public class AdminService
 
         if (updated)
         {
-            UserModel.Update(user); // update username or pin
-            CustomerModel.Update(customer); // update customer_name or status
+            _userModel.Update(user); // update username or pin
+            _customerModel.Update(customer); // update customer_name or status
             Console.WriteLine("\nAccount updated successfully.");
         }
         else
@@ -227,7 +235,7 @@ public class AdminService
         Console.ReadKey(true);
     }
 
-    public static void SearchAccount()
+    public void SearchAccount()
     {
         Console.Clear();
         Console.WriteLine("Searching for account...");
@@ -236,14 +244,14 @@ public class AdminService
         {
             int cust_id = InputHelper.ReadID("Please Enter Customer ID: ");
 
-            var customer = CustomerModel.GetBy(cust_id); // get customer info
+            var customer = _customerModel.GetBy(cust_id); // get customer info
             if (customer == null)
             {
                 Console.WriteLine("Customer does not exist. Please try again.");
                 continue;
             }
 
-            var user = UserModel.GetBy(customer.user_id); // get user record associated with customer for login info
+            var user = _userModel.GetBy(customer.user_id); // get user record associated with customer for login info
 
 
             // Customer found

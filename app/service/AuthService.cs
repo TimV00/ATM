@@ -1,14 +1,29 @@
 ﻿namespace service;
-
-using dal;
 using model;
 using util;
+using dal;
 
-public class AuthService
+public interface IAuthService
 {
-    public static User? Authenticate(string username, int password)
+    void Run();
+}
+
+public class AuthService : IAuthService
+{
+    private readonly UserModel _userModel;
+    private readonly IAdminService _adminService;
+    private readonly ICustomerService _customerService;
+
+    public AuthService(UserModel userModel, IAdminService adminService, ICustomerService customerService)
     {
-        var user = UserModel.GetBy(username);
+        _userModel = userModel;
+        _adminService = adminService;
+        _customerService = customerService;
+    }
+
+    public User? Authenticate(string username, int password)
+    {
+        var user = _userModel.GetBy(username);
         if (user == null)
         {
             Console.Clear();
@@ -21,31 +36,28 @@ public class AuthService
             Console.WriteLine("Incorrect Password. Please try again");
             return null;
         }
-
         Console.Clear();
         Console.WriteLine("Login successful!");
         return user;
     }
 
-    private static bool RouteUser(User user)
+    private bool RouteUser(User user)
     {
         if (!user.role.Equals("ADMIN", StringComparison.OrdinalIgnoreCase))
-            return CustomerService.DisplayCustomerMenu(user);
+            return _customerService.DisplayCustomerMenu(user);
         else
-            return AdminService.DisplayAdminMenu(user);
+            return _adminService.DisplayAdminMenu(user);
     }
 
-    public static void Run()
+    public void Run()
     {
         Console.Clear();
         bool exit = false;
         while (!exit)
         {
             Console.WriteLine("------ ATM Login -----");
-
             string username = InputHelper.ReadString("Enter Username: ");
             int password = InputHelper.ReadPin("Enter Pin code: ");
-
             var user = Authenticate(username, password);
             if (user != null)
                 exit = RouteUser(user);

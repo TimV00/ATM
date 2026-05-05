@@ -1,15 +1,49 @@
 ﻿namespace model;
+
 using dal;
 using System.Data;
 
 public class User
 {
-    public int user_id { get; set; }
-    public string username { get; set; }
-    public int password { get; set; }
-    public string role { get; set; }
-}
+    public int user_id { get; private set; }
+    public string username { get; private set; }
+    public int password { get; private set; }
+    public string role { get; private set; }
 
+    private User() { }
+
+    public static User Create(int user_id, string username, int password, string role)
+    {
+        if (string.IsNullOrWhiteSpace(username))
+            throw new ArgumentException("Username cannot be empty.");
+        if (password < 10000 || password > 99999)
+            throw new ArgumentException("PIN must be a 5-digit number (10000–99999).");
+        if (string.IsNullOrWhiteSpace(role))
+            throw new ArgumentException("Role cannot be empty.");
+
+        return new User
+        {
+            user_id = user_id,
+            username = username,
+            password = password,
+            role = role
+        };
+    }
+    public void UpdateUsername(string username)
+    {
+        if (string.IsNullOrWhiteSpace(username))
+            throw new ArgumentException("Username cannot be empty.");
+        this.username = username;
+    }
+
+    public void UpdatePassword(int password)
+    {
+        if (password < 10000 || password > 99999)
+            throw new ArgumentException("PIN must be a 5-digit number (10000–99999).");
+        this.password = password;
+    }
+
+}
 public class UserModel
 {
     private readonly IUserDal _dal;
@@ -57,11 +91,10 @@ public class UserModel
         return _dal.DeleteUser(id);
     }
 
-    private static User MapRow(DataRow r) => new User
-    {
-        user_id = (int)r["user_id"],
-        username = (string)r["username"],
-        password = (int)r["password"],
-        role = r["role"] == DBNull.Value ? null : r["role"].ToString(),
-    };
+    private static User MapRow(DataRow r) => User.Create(
+        (int)r["user_id"],
+        (string)r["username"],
+        (int)r["password"],
+        r["role"] == DBNull.Value ? null : r["role"].ToString()
+    );
 }

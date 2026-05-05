@@ -1,4 +1,5 @@
 ﻿namespace service;
+
 using model;
 using util;
 
@@ -75,14 +76,17 @@ public class CustomerService : ICustomerService
         while (true)
         {
             withdrawal = InputHelper.ReadDeposit("Enter the cash amount to withdraw: ");
-
-            if (withdrawal <= customer.balance)
+            try
+            {
+                customer.Withdraw(withdrawal);
                 break;
-
-            Console.WriteLine("Withdrawal amount cannot be greater than current balance.");
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
-        customer.balance -= withdrawal;
         _customerModel.Update(customer);
         Console.WriteLine("Cash withdrawn successfully.");
         DisplayBalance(customer);
@@ -92,9 +96,8 @@ public class CustomerService : ICustomerService
     {
         Console.Clear();
         Console.WriteLine("Depositing cash...");
-        // ask for new account balance
         decimal deposit = InputHelper.ReadDeposit("Enter the cash amount to deposit: ");
-        customer.balance += deposit;
+        customer.Deposit(deposit);
         _customerModel.Update(customer);
         Console.WriteLine("Cash deposited successfully.");
         DisplayBalance(customer);

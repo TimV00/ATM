@@ -12,14 +12,12 @@ public class User
 
     private User() { }
 
-    public static User Create(int user_id, string username, int password, string role)
+    public static User Create(int user_id, string username, int password, string? role)
     {
         if (string.IsNullOrWhiteSpace(username))
             throw new ArgumentException("Username cannot be empty.");
         if (password < 10000 || password > 99999)
             throw new ArgumentException("PIN must be a 5-digit number (10000–99999).");
-        if (string.IsNullOrWhiteSpace(role))
-            throw new ArgumentException("Role cannot be empty.");
 
         return new User
         {

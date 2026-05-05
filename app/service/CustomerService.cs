@@ -3,19 +3,40 @@
 using model;
 using util;
 
+/// <summary>
+/// Defines the contract for the customer menu service.
+/// </summary>
 public interface ICustomerService
 {
+    /// <summary>
+    /// Displays the customer menu and handles customer operations.
+    /// </summary>
+    /// <param name="user">The authenticated customer user.</param>
+    /// <returns>True if the user chose to exit the application.</returns>
     bool DisplayCustomerMenu(User user);
 }
 
+/// <summary>
+/// Handles all customer-facing operations including withdrawals, deposits, and balance display.
+/// </summary>
 public class CustomerService : ICustomerService
 {
     private readonly CustomerModel _customerModel;
 
+    /// <summary>
+    /// Initializes a new instance of <see cref="CustomerService"/>.
+    /// </summary>
+    /// <param name="customerModel">The customer model for database access.</param>
     public CustomerService(CustomerModel customerModel)
     {
         _customerModel = customerModel;
     }
+
+    /// <summary>
+    /// Displays the customer menu and handles navigation to customer operations.
+    /// </summary>
+    /// <param name="user">The authenticated customer user.</param>
+    /// <returns>True if the user chose to exit the application.</returns>
     public bool DisplayCustomerMenu(User user)
     {
         var customer = _customerModel.GetByUserID(user.user_id);
@@ -67,6 +88,10 @@ public class CustomerService : ICustomerService
         return exit;
     }
 
+    /// <summary>
+    /// Prompts the customer to enter a withdrawal amount and processes it.
+    /// </summary>
+    /// <param name="customer">The customer performing the withdrawal.</param>
     public void WithdrawCash(Customer customer)
     {
         Console.Clear();
@@ -92,6 +117,10 @@ public class CustomerService : ICustomerService
         DisplayBalance(customer);
     }
 
+    /// <summary>
+    /// Prompts the customer to enter a deposit amount and processes it.
+    /// </summary>
+    /// <param name="customer">The customer performing the deposit.</param>
     public void DepositCash(Customer customer)
     {
         Console.Clear();
@@ -103,6 +132,10 @@ public class CustomerService : ICustomerService
         DisplayBalance(customer);
     }
 
+    /// <summary>
+    /// Displays the current account balance for the customer.
+    /// </summary>
+    /// <param name="customer">The customer whose balance to display.</param>
     public void DisplayBalance(Customer customer)
     {
         Console.Clear();

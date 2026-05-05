@@ -3,21 +3,38 @@
 using model;
 using util;
 
+/// <summary>
+/// Defines the contract for the admin menu service.
+/// </summary>
 public interface IAdminService
 {
     bool DisplayAdminMenu(User user);
 }
 
+/// <summary>
+/// Handles all administrative operations including account creation, deletion, updating, and searching.
+/// </summary>
 public class AdminService : IAdminService
 {
     private readonly UserModel _userModel;
     private readonly CustomerModel _customerModel;
 
+    /// <summary>
+    /// Initializes a new instance of <see cref="AdminService"/>.
+    /// </summary>
+    /// <param name="userModel">The user model for database access.</param>
+    /// <param name="customerModel">The customer model for database access.</param>
     public AdminService(UserModel userModel, CustomerModel customerModel)
     {
         _userModel = userModel;
         _customerModel = customerModel;
     }
+
+    /// <summary>
+    /// Displays the admin menu and handles navigation to admin operations.
+    /// </summary>
+    /// <param name="user">The authenticated admin user.</param>
+    /// <returns>True if the user chose to exit the application.</returns>
     public bool DisplayAdminMenu(User user)
     {
         bool exit = false;
@@ -74,6 +91,9 @@ public class AdminService : IAdminService
         return exit;
     }
 
+    /// <summary>
+    /// Prompts the admin to enter details for a new customer account and creates it.
+    /// </summary>
     public void CreateNewAccount()
     {
         Console.Clear();
@@ -104,6 +124,9 @@ public class AdminService : IAdminService
         Console.ReadKey(true);
     }
 
+    /// <summary>
+    /// Prompts the admin to select a customer account to delete and removes it.
+    /// </summary>
     public void DeleteAccount()
     {
         Console.Clear();
@@ -134,6 +157,9 @@ public class AdminService : IAdminService
         Console.ReadKey(true);
     }
 
+    /// <summary>
+    /// Prompts the admin to select a customer account to update and applies changes.
+    /// </summary>
     public void UpdateAccount()
     {
         Console.Clear();
@@ -179,6 +205,9 @@ public class AdminService : IAdminService
         Console.ReadKey(true);
     }
 
+    /// <summary>
+    /// Prompts the admin to search for a customer account by ID and displays the result.
+    /// </summary>
     public void SearchAccount()
     {
         Console.Clear();

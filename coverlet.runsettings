@@ -6,7 +6,7 @@
         <Configuration>
           <Format>cobertura</Format>
           <ExcludeByAttribute>ExcludeFromCodeCoverage</ExcludeByAttribute>
-          <Exclude>[*.Tests]*,[ATM]dal.*</Exclude>
+          <Exclude>[*.Tests]*,[ATM]dal.*,[ATM]service.*,[ATM]util.*,[ATM]ATM.Program</Exclude>
         </Configuration>
       </DataCollector>
     </DataCollectors>

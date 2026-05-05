@@ -1,4 +1,5 @@
 namespace ATM.Tests.Model;
+
 using Moq;
 using model;
 using dal;
@@ -102,5 +103,35 @@ public class UserModelTests
         _mockDal.Setup(d => d.GetAll()).Returns(dt);
         var users = _userModel.GetAll();
         Assert.Equal(2, users.Count);
+    }
+    
+    [Fact]
+    public void GetBy_Int_ReturnsNull_WhenDataTableIsNull()
+    {
+        _mockDal.Setup(d => d.GetBy(99)).Returns((DataTable)null);
+        var user = _userModel.GetBy(99);
+        Assert.Null(user);
+    }
+
+    [Fact]
+    public void GetBy_String_ReturnsNull_WhenDataTableIsNull()
+    {
+        _mockDal.Setup(d => d.GetBy("nobody")).Returns((DataTable)null);
+        var user = _userModel.GetBy("nobody");
+        Assert.Null(user);
+    }
+
+    [Fact]
+    public void MapRow_NullRole_ReturnsUserWithNullRole()
+    {
+        var dt = new DataTable();
+        dt.Columns.Add("user_id", typeof(int));
+        dt.Columns.Add("username", typeof(string));
+        dt.Columns.Add("password", typeof(int));
+        dt.Columns.Add("role", typeof(object));
+        dt.Rows.Add(1, "testuser", 12345, DBNull.Value);
+        _mockDal.Setup(d => d.GetBy(1)).Returns(dt);
+        var user = _userModel.GetBy(1);
+        Assert.Null(user.role);
     }
 }

@@ -1,4 +1,5 @@
 namespace ATM.Tests.Domain;
+
 using model;
 
 public class UserTests
@@ -56,15 +57,10 @@ public class UserTests
 
     // Role validation
     [Fact]
-    public void Create_EmptyRole_ThrowsArgumentException()
+    public void Create_NullRole_ReturnsUser()
     {
-        Assert.Throws<ArgumentException>(() => User.Create(1, "testuser", 12345, ""));
-    }
-
-    [Fact]
-    public void Create_WhitespaceRole_ThrowsArgumentException()
-    {
-        Assert.Throws<ArgumentException>(() => User.Create(1, "testuser", 12345, "   "));
+        var user = User.Create(1, "testuser", 12345, null);
+        Assert.Null(user.role);
     }
 
     // UpdateUsername

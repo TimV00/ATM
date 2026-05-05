@@ -1,4 +1,5 @@
 namespace ATM.Tests.Model;
+
 using Moq;
 using model;
 using dal;
@@ -105,5 +106,21 @@ public class CustomerModelTests
         _mockDal.Setup(d => d.GetAll()).Returns(dt);
         var customers = _customerModel.GetAll();
         Assert.Equal(2, customers.Count);
+    }
+
+    [Fact]
+    public void GetBy_ReturnsNull_WhenDataTableIsNull()
+    {
+        _mockDal.Setup(d => d.GetBy(99)).Returns((DataTable)null);
+        var customer = _customerModel.GetBy(99);
+        Assert.Null(customer);
+    }
+
+    [Fact]
+    public void GetByUserID_ReturnsNull_WhenDataTableIsNull()
+    {
+        _mockDal.Setup(d => d.GetByUserID(99)).Returns((DataTable)null);
+        var customer = _customerModel.GetByUserID(99);
+        Assert.Null(customer);
     }
 }

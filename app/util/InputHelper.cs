@@ -80,6 +80,19 @@ namespace util
             }
         }
 
+        public static string ReadStatus(string prompt)
+        {
+            while (true)
+            {
+                Console.Write(prompt);
+                string input = Console.ReadLine();
+                if (input.Equals("Active", StringComparison.OrdinalIgnoreCase) ||
+                    input.Equals("Inactive", StringComparison.OrdinalIgnoreCase))
+                    return input;
+                Console.WriteLine("Invalid status. Please enter 'Active' or 'Inactive'.");
+            }
+        }
+
         public static int ReadPin(string prompt)
         {
             while (true)
@@ -104,5 +117,42 @@ namespace util
 
             return false;
         }
+        public static string ReadStringOrSkip(string prompt)
+        {
+            Console.Write(prompt);
+            string input = Console.ReadLine();
+            return string.IsNullOrWhiteSpace(input) ? null : input;
+        }
+
+        public static string ReadStatusOrSkip(string prompt)
+        {
+            Console.Write(prompt);
+            string input = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(input)) return null;
+            while (!input.Equals("Active", StringComparison.OrdinalIgnoreCase) &&
+                   !input.Equals("Inactive", StringComparison.OrdinalIgnoreCase))
+            {
+                Console.WriteLine("Invalid status. Please enter 'Active' or 'Inactive'.");
+                Console.Write(prompt);
+                input = Console.ReadLine();
+            }
+            return input;
+        }
+
+        public static int? ReadPinOrSkip(string prompt)
+        {
+            Console.Write(prompt);
+            string input = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(input)) return null;
+            while (input.Length != 5 || !int.TryParse(input, out _))
+            {
+                Console.WriteLine("PIN must be a 5 digit number.");
+                Console.Write(prompt);
+                input = Console.ReadLine();
+            }
+            return int.Parse(input);
+        }
+
+
     }
 }

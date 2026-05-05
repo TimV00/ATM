@@ -1,4 +1,5 @@
 ﻿namespace service;
+
 using model;
 using util;
 
@@ -78,42 +79,27 @@ public class AdminService : IAdminService
         Console.Clear();
         Console.WriteLine("Creating new account...");
 
-        // ask for new account username
         string newusername = InputHelper.ReadString("Enter Account Holder's username: ");
-
-        // ask for new account pin
         int newpassword = InputHelper.ReadPin("Enter Account Holder's Pin code: ");
-
-        // ask for new account holder name
         string newcustname = InputHelper.ReadString("Enter Account Holder's Name: ");
-
-        // ask for new account balance
         decimal newbalance = InputHelper.ReadBalance("Enter Account Holder's Starting Balance: ");
+        string newstatus = InputHelper.ReadStatus("Enter Account Holder's Status (Active/Inactive): ");
 
-        // ask for new account status
-        string newstatus = InputHelper.ReadString("Enter Account Holder's Status: ");
-
-        //Create a new user table record
-        var newUser = new User
+        try
         {
-            user_id = 0,
-            username = newusername,
-            password = newpassword,
-            role = "Customer"
-        };
-        var newuserID = _userModel.Create(newUser);
+            var newUser = User.Create(0, newusername, newpassword, "Customer");
+            var newuserID = _userModel.Create(newUser);
 
-        //Create a new customer table record
-        var newCustomer = new Customer
+            var newCustomer = Customer.Create(0, newuserID, newcustname, newbalance, newstatus);
+            var newcustID = _customerModel.Create(newCustomer);
+
+            Console.WriteLine("Account Successfully Created - the account number assigned is: " + newcustID);
+        }
+        catch (ArgumentException ex)
         {
-            user_id = newuserID,
-            customer_name = newcustname,
-            balance = newbalance,
-            status = newstatus
-        };
-        var newcustID = _customerModel.Create(newCustomer);
+            Console.WriteLine($"Invalid input: {ex.Message}");
+        }
 
-        Console.WriteLine("Account Successfully Created - the account number assigned is: " + newcustID);
         Console.WriteLine("Press any key to return to the menu...");
         Console.ReadKey(true);
     }
@@ -152,12 +138,10 @@ public class AdminService : IAdminService
     {
         Console.Clear();
         Console.WriteLine("Updating account...");
-
         bool updated = false;
 
         int cust_id = InputHelper.ReadID("Enter Customer ID to update: ");
         var customer = _customerModel.GetBy(cust_id);
-
         if (customer == null)
         {
             Console.WriteLine("Customer does not exist. Please try again.");
@@ -166,64 +150,24 @@ public class AdminService : IAdminService
         }
 
         var user = _userModel.GetBy(customer.user_id);
-
         Console.WriteLine("\nPress ENTER to keep the current value.\n");
 
-        // update customer name
-        Console.WriteLine($"Current Holder: {customer.customer_name}");
-        Console.Write("New Holder: ");
-        string newcust_name = Console.ReadLine();
+        string newcust_name = InputHelper.ReadStringOrSkip($"Current Holder: {customer.customer_name}\nNew Holder (or ENTER to skip): ");
+        if (newcust_name != null) { customer.UpdateName(newcust_name); updated = true; }
 
-        if (!string.IsNullOrWhiteSpace(newcust_name))
-        {
-            customer.customer_name = newcust_name;
-            updated = true;
-        }
+        string newstatus = InputHelper.ReadStatusOrSkip($"Current Status: {customer.status}\nNew Status (Active/Inactive, or ENTER to skip): ");
+        if (newstatus != null) { customer.UpdateStatus(newstatus); updated = true; }
 
-        // update customer status
-        Console.WriteLine($"Current Status: {customer.status}");
-        Console.Write("New Status: ");
-        string newstatus = Console.ReadLine();
+        string newusername = InputHelper.ReadStringOrSkip($"Current Username: {user.username}\nNew Username (or ENTER to skip): ");
+        if (newusername != null) { user.UpdateUsername(newusername); updated = true; }
 
-        if (!string.IsNullOrWhiteSpace(newstatus))
-        {
-            customer.status = newstatus;
-            updated = true;
-        }
-
-        // update username
-        Console.WriteLine($"Current Username: {user.username}");
-        Console.Write("New Username: ");
-        string newusername = Console.ReadLine();
-
-        if (!string.IsNullOrWhiteSpace(newusername))
-        {
-            user.username = newusername;
-            updated = true;
-        }
-
-        // update PIN
-        Console.WriteLine($"\nCurrent PIN: {user.password}");
-        Console.Write("New PIN: ");
-        string newpasswordstr = Console.ReadLine();
-
-        if (!string.IsNullOrWhiteSpace(newpasswordstr))
-        {
-            if (newpasswordstr.Length == 5 && int.TryParse(newpasswordstr, out int newpassword))
-            {
-                user.password = newpassword;
-                updated = true;
-            }
-            else
-            {
-                Console.WriteLine("Invalid PIN. Keeping previous value.");
-            }
-        }
+        int? newpassword = InputHelper.ReadPinOrSkip($"Current PIN: {user.password}\nNew PIN (or ENTER to skip): ");
+        if (newpassword != null) { user.UpdatePassword(newpassword.Value); updated = true; }
 
         if (updated)
         {
-            _userModel.Update(user); // update username or pin
-            _customerModel.Update(customer); // update customer_name or status
+            _userModel.Update(user);
+            _customerModel.Update(customer);
             Console.WriteLine("\nAccount updated successfully.");
         }
         else

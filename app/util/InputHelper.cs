@@ -34,7 +34,7 @@ namespace util
             }
         }
 
-        public static decimal ReadDeposit(string prompt)
+        public static decimal ReadCashAmount(string prompt)
         {
             decimal value;
 
@@ -47,22 +47,6 @@ namespace util
                     return value;
 
                 Console.WriteLine("Deposit amount must be a valid amount greater than zero.");
-            }
-        }
-
-        public static decimal ReadWithdrawal(string prompt)
-        {
-            decimal value;
-
-            while (true)
-            {
-                Console.Write(prompt);
-                string input = Console.ReadLine();
-
-                if (decimal.TryParse(input, out value) && value > 0)
-                    return value;
-
-                Console.WriteLine("Withdrawal amount must be a valid amount greater than zero.");
             }
         }
 

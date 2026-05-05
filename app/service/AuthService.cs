@@ -1,7 +1,6 @@
 ﻿namespace service;
 using model;
 using util;
-using dal;
 
 public interface IAuthService
 {

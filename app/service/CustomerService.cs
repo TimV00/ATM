@@ -75,7 +75,7 @@ public class CustomerService : ICustomerService
 
         while (true)
         {
-            withdrawal = InputHelper.ReadDeposit("Enter the cash amount to withdraw: ");
+            withdrawal = InputHelper.ReadCashAmount("Enter the cash amount to withdraw: ");
             try
             {
                 customer.Withdraw(withdrawal);
@@ -96,7 +96,7 @@ public class CustomerService : ICustomerService
     {
         Console.Clear();
         Console.WriteLine("Depositing cash...");
-        decimal deposit = InputHelper.ReadDeposit("Enter the cash amount to deposit: ");
+        decimal deposit = InputHelper.ReadCashAmount("Enter the cash amount to deposit: ");
         customer.Deposit(deposit);
         _customerModel.Update(customer);
         Console.WriteLine("Cash deposited successfully.");

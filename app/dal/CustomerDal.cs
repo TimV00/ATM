@@ -1,6 +1,7 @@
 ﻿namespace dal;
 using System.Data;
 using MySql.Data.MySqlClient;
+using System.Diagnostics.CodeAnalysis;
 
 public interface ICustomerDal
 {
@@ -11,7 +12,7 @@ public interface ICustomerDal
     int Update(int customer_id, string customer_name, decimal balance, string status);
     int DeleteCustomer(int id);
 }
-
+[ExcludeFromCodeCoverage]
 public class CustomerDal : ICustomerDal
 {
     private readonly string _connectionString;

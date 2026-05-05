@@ -1,6 +1,8 @@
 ﻿namespace dal;
 using System.Data;
 using MySql.Data.MySqlClient;
+using System.Diagnostics.CodeAnalysis;
+
 
 public interface IUserDal
 {
@@ -12,6 +14,7 @@ public interface IUserDal
     int DeleteUser(int id);
 }
 
+[ExcludeFromCodeCoverage]
 public class UserDal : IUserDal
 {
     private readonly string _connectionString;

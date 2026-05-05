@@ -9,7 +9,7 @@ namespace util
             while (true)
             {
                 Console.Write(prompt);
-                string input = Console.ReadLine();
+                string input = Console.ReadLine() ?? string.Empty;
 
                 if (int.TryParse(input, out value))
                     return value;
@@ -25,7 +25,7 @@ namespace util
             while (true)
             {
                 Console.Write(prompt);
-                string input = Console.ReadLine();
+                string input = Console.ReadLine() ?? string.Empty;
 
                 if (decimal.TryParse(input, out value) && value > 0)
                     return value;
@@ -41,7 +41,7 @@ namespace util
             while (true)
             {
                 Console.Write(prompt);
-                string input = Console.ReadLine();
+                string input = Console.ReadLine() ?? string.Empty;
 
                 if (decimal.TryParse(input, out value) && value > 0)
                     return value;
@@ -55,7 +55,7 @@ namespace util
             while (true)
             {
                 Console.Write(prompt);
-                string input = Console.ReadLine();
+                string input = Console.ReadLine() ?? string.Empty;
 
                 if (!string.IsNullOrWhiteSpace(input))
                     return input;
@@ -69,7 +69,7 @@ namespace util
             while (true)
             {
                 Console.Write(prompt);
-                string input = Console.ReadLine();
+                string input = Console.ReadLine() ?? string.Empty;
                 if (input.Equals("Active", StringComparison.OrdinalIgnoreCase) ||
                     input.Equals("Inactive", StringComparison.OrdinalIgnoreCase))
                     return input;
@@ -82,7 +82,7 @@ namespace util
             while (true)
             {
                 Console.Write(prompt);
-                string input = Console.ReadLine();
+                string input = Console.ReadLine() ?? string.Empty;
 
                 if (input.Length == 5 && int.TryParse(input, out int pin))
                     return pin;
@@ -94,7 +94,7 @@ namespace util
         public static bool ConfirmId(string prompt, int expectedId)
         {
             Console.Write(prompt);
-            string input = Console.ReadLine();
+            string input = Console.ReadLine() ?? string.Empty;
 
             if (int.TryParse(input, out int confirmId))
                 return confirmId == expectedId;
@@ -104,21 +104,21 @@ namespace util
         public static string ReadStringOrSkip(string prompt)
         {
             Console.Write(prompt);
-            string input = Console.ReadLine();
+            string input = Console.ReadLine() ?? string.Empty;
             return string.IsNullOrWhiteSpace(input) ? null : input;
         }
 
         public static string ReadStatusOrSkip(string prompt)
         {
             Console.Write(prompt);
-            string input = Console.ReadLine();
+            string input = Console.ReadLine() ?? string.Empty;
             if (string.IsNullOrWhiteSpace(input)) return null;
             while (!input.Equals("Active", StringComparison.OrdinalIgnoreCase) &&
                    !input.Equals("Inactive", StringComparison.OrdinalIgnoreCase))
             {
                 Console.WriteLine("Invalid status. Please enter 'Active' or 'Inactive'.");
                 Console.Write(prompt);
-                input = Console.ReadLine();
+                input = Console.ReadLine() ?? string.Empty;
             }
             return input;
         }
@@ -126,13 +126,13 @@ namespace util
         public static int? ReadPinOrSkip(string prompt)
         {
             Console.Write(prompt);
-            string input = Console.ReadLine();
+            string input = Console.ReadLine() ?? string.Empty;
             if (string.IsNullOrWhiteSpace(input)) return null;
             while (input.Length != 5 || !int.TryParse(input, out _))
             {
                 Console.WriteLine("PIN must be a 5 digit number.");
                 Console.Write(prompt);
-                input = Console.ReadLine();
+                input = Console.ReadLine() ?? string.Empty;
             }
             return int.Parse(input);
         }

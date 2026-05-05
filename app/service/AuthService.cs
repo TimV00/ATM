@@ -42,7 +42,7 @@ public class AuthService : IAuthService
 
     private bool RouteUser(User user)
     {
-        if (!user.role.Equals("ADMIN", StringComparison.OrdinalIgnoreCase))
+        if (!string.Equals(user.role, "ADMIN", StringComparison.OrdinalIgnoreCase))
             return _customerService.DisplayCustomerMenu(user);
         else
             return _adminService.DisplayAdminMenu(user);

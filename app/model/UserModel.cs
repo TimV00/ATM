@@ -6,9 +6,9 @@ using System.Data;
 public class User
 {
     public int user_id { get; private set; }
-    public string username { get; private set; }
+    public string? username { get; private set; }
     public int password { get; private set; }
-    public string role { get; private set; }
+    public string? role { get; private set; }
 
     private User() { }
 

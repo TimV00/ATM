@@ -1,23 +1,40 @@
-﻿namespace service;
+namespace service;
 
 using model;
 using util;
 
+/// <summary>
+/// Defines the contract for the admin menu service.
+/// </summary>
 public interface IAdminService
 {
     bool DisplayAdminMenu(User user);
 }
 
+/// <summary>
+/// Handles all administrative operations including account creation, deletion, updating, and searching.
+/// </summary>
 public class AdminService : IAdminService
 {
     private readonly UserModel _userModel;
     private readonly CustomerModel _customerModel;
 
+    /// <summary>
+    /// Initializes a new instance of <see cref="AdminService"/>.
+    /// </summary>
+    /// <param name="userModel">The user model for database access.</param>
+    /// <param name="customerModel">The customer model for database access.</param>
     public AdminService(UserModel userModel, CustomerModel customerModel)
     {
         _userModel = userModel;
         _customerModel = customerModel;
     }
+
+    /// <summary>
+    /// Displays the admin menu and handles navigation to admin operations.
+    /// </summary>
+    /// <param name="user">The authenticated admin user.</param>
+    /// <returns>True if the user chose to exit the application.</returns>
     public bool DisplayAdminMenu(User user)
     {
         bool exit = false;
@@ -74,6 +91,9 @@ public class AdminService : IAdminService
         return exit;
     }
 
+    /// <summary>
+    /// Prompts the admin to enter details for a new customer account and creates it.
+    /// </summary>
     public void CreateNewAccount()
     {
         Console.Clear();
@@ -104,6 +124,9 @@ public class AdminService : IAdminService
         Console.ReadKey(true);
     }
 
+    /// <summary>
+    /// Prompts the admin to select a customer account to delete and removes it.
+    /// </summary>
     public void DeleteAccount()
     {
         Console.Clear();
@@ -118,6 +141,12 @@ public class AdminService : IAdminService
         }
 
         var user = _userModel.GetBy(customer.user_id);
+        if (user == null)
+        {
+            Console.WriteLine("User record not found.");
+            Console.ReadKey(true);
+            return;
+        }
 
         if (!InputHelper.ConfirmId($"\nYou wish to delete the account held by {customer.customer_name} . If this information is correct, please re-enter the account number: ", cust_id))
         {
@@ -134,6 +163,9 @@ public class AdminService : IAdminService
         Console.ReadKey(true);
     }
 
+    /// <summary>
+    /// Prompts the admin to select a customer account to update and applies changes.
+    /// </summary>
     public void UpdateAccount()
     {
         Console.Clear();
@@ -150,15 +182,21 @@ public class AdminService : IAdminService
         }
 
         var user = _userModel.GetBy(customer.user_id);
+        if (user == null)
+        {
+            Console.WriteLine("User record not found.");
+            Console.ReadKey(true);
+            return;
+        }
         Console.WriteLine("\nPress ENTER to keep the current value.\n");
 
-        string newcust_name = InputHelper.ReadStringOrSkip($"Current Holder: {customer.customer_name}\nNew Holder (or ENTER to skip): ");
+        string? newcust_name = InputHelper.ReadStringOrSkip($"Current Holder: {customer.customer_name}\nNew Holder (or ENTER to skip): ");
         if (newcust_name != null) { customer.UpdateName(newcust_name); updated = true; }
 
-        string newstatus = InputHelper.ReadStatusOrSkip($"Current Status: {customer.status}\nNew Status (Active/Inactive, or ENTER to skip): ");
+        string? newstatus = InputHelper.ReadStatusOrSkip($"Current Status: {customer.status}\nNew Status (Active/Inactive, or ENTER to skip): ");
         if (newstatus != null) { customer.UpdateStatus(newstatus); updated = true; }
 
-        string newusername = InputHelper.ReadStringOrSkip($"Current Username: {user.username}\nNew Username (or ENTER to skip): ");
+        string? newusername = InputHelper.ReadStringOrSkip($"Current Username: {user.username ?? "unknown"}\nNew Username (or ENTER to skip): ");
         if (newusername != null) { user.UpdateUsername(newusername); updated = true; }
 
         int? newpassword = InputHelper.ReadPinOrSkip($"Current PIN: {user.password}\nNew PIN (or ENTER to skip): ");
@@ -179,6 +217,9 @@ public class AdminService : IAdminService
         Console.ReadKey(true);
     }
 
+    /// <summary>
+    /// Prompts the admin to search for a customer account by ID and displays the result.
+    /// </summary>
     public void SearchAccount()
     {
         Console.Clear();
@@ -196,7 +237,12 @@ public class AdminService : IAdminService
             }
 
             var user = _userModel.GetBy(customer.user_id); // get user record associated with customer for login info
-
+            if (user == null)
+            {
+                Console.WriteLine("User record not found.");
+                Console.ReadKey(true);
+                return;
+            }
 
             // Customer found
             Console.WriteLine($"Customer found. The account information is:");

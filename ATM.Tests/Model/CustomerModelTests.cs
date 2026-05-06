@@ -111,7 +111,7 @@ public class CustomerModelTests
     [Fact]
     public void GetBy_ReturnsNull_WhenDataTableIsNull()
     {
-        _mockDal.Setup(d => d.GetBy(99)).Returns((DataTable)null);
+        _mockDal.Setup(d => d.GetBy(99)).Returns((DataTable)null!);
         var customer = _customerModel.GetBy(99);
         Assert.Null(customer);
     }
@@ -119,7 +119,7 @@ public class CustomerModelTests
     [Fact]
     public void GetByUserID_ReturnsNull_WhenDataTableIsNull()
     {
-        _mockDal.Setup(d => d.GetByUserID(99)).Returns((DataTable)null);
+        _mockDal.Setup(d => d.GetByUserID(99)).Returns((DataTable)null!);
         var customer = _customerModel.GetByUserID(99);
         Assert.Null(customer);
     }

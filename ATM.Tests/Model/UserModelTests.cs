@@ -104,11 +104,11 @@ public class UserModelTests
         var users = _userModel.GetAll();
         Assert.Equal(2, users.Count);
     }
-    
+
     [Fact]
     public void GetBy_Int_ReturnsNull_WhenDataTableIsNull()
     {
-        _mockDal.Setup(d => d.GetBy(99)).Returns((DataTable)null);
+        _mockDal.Setup(d => d.GetBy(99)).Returns((DataTable)null!);
         var user = _userModel.GetBy(99);
         Assert.Null(user);
     }
@@ -116,7 +116,7 @@ public class UserModelTests
     [Fact]
     public void GetBy_String_ReturnsNull_WhenDataTableIsNull()
     {
-        _mockDal.Setup(d => d.GetBy("nobody")).Returns((DataTable)null);
+        _mockDal.Setup(d => d.GetBy("nobody")).Returns((DataTable)null!);
         var user = _userModel.GetBy("nobody");
         Assert.Null(user);
     }
@@ -132,6 +132,6 @@ public class UserModelTests
         dt.Rows.Add(1, "testuser", 12345, DBNull.Value);
         _mockDal.Setup(d => d.GetBy(1)).Returns(dt);
         var user = _userModel.GetBy(1);
-        Assert.Null(user.role);
+        Assert.Null(user!.role);
     }
 }

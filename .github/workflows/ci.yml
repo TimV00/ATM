@@ -29,12 +29,7 @@ jobs:
         run: dotnet build --configuration Release --no-restore
 
       - name: Run tests with coverage
-        run: dotnet test --collect:"XPlat Code Coverage" --results-directory ./coverage
-          --
-          DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Exclude="[ATM]dal.*,[ATM]service.*,[ATM]util.*,[ATM]ATM.Program"
-
-      - name: Print coverage report
-        run: cat ./coverage/**/coverage.cobertura.xml
+        run: dotnet test --collect:"XPlat Code Coverage" --results-directory ./coverage -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Exclude="[ATM]dal.*,[ATM]service.*,[ATM]util.*,[ATM]ATM.Program"
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
@@ -42,3 +37,21 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage/**/coverage.cobertura.xml
           fail_ci_if_error: true
+
+      - name: Install Doxygen
+        run: sudo apt install -y doxygen
+
+      - name: Install LaTeX
+        run: sudo apt install -y texlive-latex-base texlive-latex-recommended texlive-fonts-recommended texlive-latex-extra
+
+      - name: Generate documentation
+        run: doxygen Doxyfile
+
+      - name: Build PDF
+        run: cd docs/latex && make
+
+      - name: Upload documentation
+        uses: actions/upload-artifact@v4
+        with:
+          name: documentation
+          path: docs/latex/refman.pdf

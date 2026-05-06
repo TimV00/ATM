@@ -101,14 +101,14 @@ namespace util
 
             return false;
         }
-        public static string ReadStringOrSkip(string prompt)
+        public static string? ReadStringOrSkip(string prompt)
         {
             Console.Write(prompt);
             string input = Console.ReadLine() ?? string.Empty;
             return string.IsNullOrWhiteSpace(input) ? null : input;
         }
 
-        public static string ReadStatusOrSkip(string prompt)
+        public static string? ReadStatusOrSkip(string prompt)
         {
             Console.Write(prompt);
             string input = Console.ReadLine() ?? string.Empty;

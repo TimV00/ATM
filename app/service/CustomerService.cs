@@ -40,6 +40,12 @@ public class CustomerService : ICustomerService
     public bool DisplayCustomerMenu(User user)
     {
         var customer = _customerModel.GetByUserID(user.user_id);
+        if (customer == null)
+        {
+            Console.WriteLine("Customer account not found.");
+            Console.ReadKey(true);
+            return true;
+        }
         bool exit = false;
 
         while (!exit)
@@ -52,7 +58,7 @@ public class CustomerService : ICustomerService
             */
             Console.Clear();
             Console.WriteLine("----- Customer Menu -----");
-            Console.WriteLine($"Welcome {customer.customer_name}!");
+            Console.WriteLine($"Welcome {customer.customer_name ?? "Customer"}!");
             Console.WriteLine("1 ------ Withdraw Cash");
             Console.WriteLine("2 ------ Deposit Cash");
             Console.WriteLine("3 ------ Display Balance");

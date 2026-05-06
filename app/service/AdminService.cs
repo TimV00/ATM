@@ -1,4 +1,4 @@
-﻿namespace service;
+namespace service;
 
 using model;
 using util;
@@ -141,6 +141,12 @@ public class AdminService : IAdminService
         }
 
         var user = _userModel.GetBy(customer.user_id);
+        if (user == null)
+        {
+            Console.WriteLine("User record not found.");
+            Console.ReadKey(true);
+            return;
+        }
 
         if (!InputHelper.ConfirmId($"\nYou wish to delete the account held by {customer.customer_name} . If this information is correct, please re-enter the account number: ", cust_id))
         {
@@ -176,15 +182,21 @@ public class AdminService : IAdminService
         }
 
         var user = _userModel.GetBy(customer.user_id);
+        if (user == null)
+        {
+            Console.WriteLine("User record not found.");
+            Console.ReadKey(true);
+            return;
+        }
         Console.WriteLine("\nPress ENTER to keep the current value.\n");
 
-        string newcust_name = InputHelper.ReadStringOrSkip($"Current Holder: {customer.customer_name}\nNew Holder (or ENTER to skip): ");
+        string? newcust_name = InputHelper.ReadStringOrSkip($"Current Holder: {customer.customer_name}\nNew Holder (or ENTER to skip): ");
         if (newcust_name != null) { customer.UpdateName(newcust_name); updated = true; }
 
-        string newstatus = InputHelper.ReadStatusOrSkip($"Current Status: {customer.status}\nNew Status (Active/Inactive, or ENTER to skip): ");
+        string? newstatus = InputHelper.ReadStatusOrSkip($"Current Status: {customer.status}\nNew Status (Active/Inactive, or ENTER to skip): ");
         if (newstatus != null) { customer.UpdateStatus(newstatus); updated = true; }
 
-        string newusername = InputHelper.ReadStringOrSkip($"Current Username: {user.username}\nNew Username (or ENTER to skip): ");
+        string? newusername = InputHelper.ReadStringOrSkip($"Current Username: {user.username ?? "unknown"}\nNew Username (or ENTER to skip): ");
         if (newusername != null) { user.UpdateUsername(newusername); updated = true; }
 
         int? newpassword = InputHelper.ReadPinOrSkip($"Current PIN: {user.password}\nNew PIN (or ENTER to skip): ");
@@ -225,7 +237,12 @@ public class AdminService : IAdminService
             }
 
             var user = _userModel.GetBy(customer.user_id); // get user record associated with customer for login info
-
+            if (user == null)
+            {
+                Console.WriteLine("User record not found.");
+                Console.ReadKey(true);
+                return;
+            }
 
             // Customer found
             Console.WriteLine($"Customer found. The account information is:");
